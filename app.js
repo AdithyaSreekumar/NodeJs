@@ -2,6 +2,11 @@ const express = require('express');
 const app = express();
 const port=3000;
 
+const mongoose = require('mongoose');
+
+mongoosemongoose.connect("mongodb+srv://raothomas2003:iambatman@node.sqfjt.mongodb.net/?retryWrites=true&w=majority&appName=Node")
+
+
 app.get('/',(req,res)=>{
     res.send('Hello Express!'); 
 });
@@ -17,6 +22,7 @@ app.get('/getname', async(req,res)=>{
                 data: null
             });
             return;
+
         }
             console.log("name",name);
             res.status(200).json({
@@ -56,3 +62,4 @@ app.get('/getname', async(req,res)=>{
 app.listen(port,()=>{
     console.log(`Server running at http://localhost:${port}`);
 });
+
