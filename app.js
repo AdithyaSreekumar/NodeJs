@@ -45,7 +45,12 @@ app.post('/register',async(req,res)=>{
                 address : address
             }
         );
-        return res.status(200).json(user);
+        return res.status(200).json({
+            status:true,
+            status_code:400,
+            message:"User created successfully",
+            data:user
+        });
     }
     catch(error){
         console.log(error);
@@ -86,15 +91,30 @@ app.post("/login",async(req,res)=>{
         if(mail){
             const result = password === mail.password;
             if(result){
-                return res.status(200).json({ status:true, message:"Email Exists"});
+                return res.status(200).json({ 
+                    status:true, 
+                    status_code:200,
+                    message:"Email Exists",
+                    data:null
+                });
             }
             else{
-                return res.status(200).json({ status:false, error:"Invalid indentails"});
+                return res.status(200).json({ 
+                    status:false, 
+                    status_code:200,
+                    error:"Invalid indentails",
+                    data:null
+                });
             }
         }
         else{
             console.log("User not found");
-            return res.status(200).json({ status:false, error:"User not Found"});
+            return res.status(400).json({ 
+                status:false,
+                status_code:400, 
+                error:"User not Found",
+                data:null,
+            });
         }
     } catch(error){
         console.error(error);
@@ -104,13 +124,13 @@ app.post("/login",async(req,res)=>{
 
 app.post("/listall",async(req,res)=>{
     try{
-        // const {id,name,email,password,address} = userModel;
         const list= await userModel.find();
         if(list.length <= 0){
             return res.status(400).json({
                 status:false,
                 status_code:400,
                 message:"No users found",
+                data:null
             });
         }
         
@@ -124,6 +144,57 @@ app.post("/listall",async(req,res)=>{
         console.error(error);
     }
 })
+
+
+app.post("/listbyId",async(req,res)=>{
+    try{
+        const {id} = req.body;
+        const item= await userModel.findOne(
+            { userid: id }
+        );
+        if(!item){
+            return res.status(400).json({
+                status:false,
+                status_code:400,
+                error:"User not found",
+                data:null
+            })
+        }
+        else{
+            return res.status(200).json({
+                status:true,
+                status_code:200,
+                message:"User data retreived successfully",
+                data:item
+            })
+        }
+    }
+    catch(error){
+        console.error(error);
+        res.status(500).json({
+             status: false,
+             status_code:500,
+             message: "Something went wrong",
+             data: null
+         });
+    }
+})
+
+
+
+app.listen(port,()=>{
+    console.log(`Server running at http://localhost:${port}`);
+});
+
+
+
+
+
+
+
+
+
+
 
 
 // app.post('/login',async(req,res)=>{
@@ -190,8 +261,3 @@ app.post("/listall",async(req,res)=>{
 // });
 
 // app.use(express.json());
-
-app.listen(port,()=>{
-    console.log(`Server running at http://localhost:${port}`);
-});
-
