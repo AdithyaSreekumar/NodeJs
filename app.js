@@ -24,11 +24,12 @@ app.get('/',async(req,res)=>{
 
 app.post('/register',async(req,res)=>{
     const { name, email, password, address } = req.body;
+    console.log("req",req.body);
     if(!name, !email, !password, !address){
         return res.status(400).json({ status:false, error: "Fill the missing fields "});
     }
     else{
-        return res.status(200).jsom({ status:true, name, email, address}); 
+        return res.status(200).json({ status:true}); 
     }
 })
 // app.get('/',(req,res)=>{
