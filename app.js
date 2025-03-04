@@ -29,7 +29,7 @@ app.post('/register',async(req,res)=>{
         return res.status(400).json({ status:false, error: "Fill the missing fields "});
     }
     else{
-        return res.status(200).json({ status:true}); 
+        return res.status(200).json({ status:true, name, email, password, address}); 
     }
 })
 // app.get('/',(req,res)=>{
