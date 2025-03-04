@@ -2,7 +2,7 @@ const express = require('express');
 const mongoose = require('mongoose');
 const app = express();
 const port=3000;
-const user = require('./model/userdata');
+const userModel = require('./model/userdata');
 
 app.use(express.json());
 
@@ -23,16 +23,80 @@ app.get('/',async(req,res)=>{
     res.send('Welcome!!');
 });
 
+// app.post('/register',async(req,res)=>{
+//     const { name, email, password, address } = req.body;
+//     // console.log("req",req.body);
+//     if(!name, !email, !password, !address){
+//         return res.status(400).json({ status:false, error: "Fill the missing fields "});
+//     }
+//     else{
+//         return res.status(200).json({ status:true, name, email, password, address}); 
+//     }
+// })
+
 app.post('/register',async(req,res)=>{
     const { name, email, password, address } = req.body;
-    // console.log("req",req.body);
-    if(!name, !email, !password, !address){
-        return res.status(400).json({ status:false, error: "Fill the missing fields "});
-    }
-    else{
-        return res.status(200).json({ status:true, name, email, password, address}); 
+    const user = await userModel.create(
+        {
+            name : name,
+            email : email,
+            password : password,
+            address : address
+        }
+    );
+    return res.status(200).json(user);
+});
+
+
+const newUser= new userModel({
+    name: "gladson mathew",
+    email: "gladsonmathew7@gmail.com",
+    password: "itsgladson"
+})
+
+// newUser.save()
+//     .then(user => console.log("User created:",user))
+//     .catch(err=> console.error('Error creating user: ',err))
+
+
+// userModel.create({
+//     name: "alan jose",
+//     email: "alanjose@gmail.com",
+//     password: "alanjose"
+// })
+//     .then(user=> console.log("User created successfully",user))
+//     .catch(err=> console.error('Error creating user: ',err))
+
+
+app.post("/login",async(req,res)=>{
+    try{
+
+        const { email, password } = req.body;
+
+
+
+
+        const mail=await userModel.findOne({email: email});
+
+        if(mail){
+            const result = password === mail.password;
+            if(result){
+                return res.status(200).json({ status:true, message:"Email Exists"});
+            }
+            else{
+                return res.status(200).json({ status:false, error:"Invalid indentails"});
+            }
+        }
+        else{
+            console.log("User not found");
+            return res.status(200).json({ status:false, error:"User not Found"});
+        }
+    } catch(error){
+        console.error(error);
     }
 })
+
+
 
 
 
