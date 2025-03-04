@@ -2,9 +2,14 @@ const express = require('express');
 const mongoose = require('mongoose');
 const app = express();
 const port=3000;
+const cors = require('cors');
 const userModel = require('./model/userdata');
+const signup = require('./Routes/signup')
 
 app.use(express.json());
+app.use(cors());
+
+app.use('/signup',signup)
 
 
 mongoose.connect("mongodb+srv://raothomas2003:iambatman@node.sqfjt.mongodb.net/Test?retryWrites=true&w=majority&appName=Node",
