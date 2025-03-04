@@ -8,9 +8,6 @@ router.post("/",async(req,res)=>{
 
         const { email, password } = req.body;
 
-
-
-
         const mail=await userModel.findOne({email: email});
 
         if(mail){
@@ -42,7 +39,13 @@ router.post("/",async(req,res)=>{
             });
         }
     } catch(error){
-        console.error(error);
+        console.log(error);
+        res.status(500).json({
+            status: false,
+            status_code:500,
+            message: "Something went wrong",
+            data: null
+        });
     }
 })
 
