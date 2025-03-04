@@ -4,12 +4,18 @@ const app = express();
 const port=3000;
 const cors = require('cors');
 const userModel = require('./model/userdata');
-const signup = require('./Routes/signup')
+const signup = require('./Routes/signup');
+const login =require('./Routes/login');
+const listall = require('./Routes/listall');
+const view = require('./Routes/view');
 
 app.use(express.json());
 app.use(cors());
 
-app.use('/signup',signup)
+app.use('/signup',signup);
+app.use('/login',login);
+app.use('/listall',listall);
+app.use('/view',view);
 
 
 mongoose.connect("mongodb+srv://raothomas2003:iambatman@node.sqfjt.mongodb.net/Test?retryWrites=true&w=majority&appName=Node",
@@ -28,6 +34,14 @@ app.get('/',async(req,res)=>{
     res.send('Welcome!!');
 });
 
+
+
+app.listen(port,()=>{
+    console.log(`Server running at http://localhost:${port}`);
+});
+
+
+
 // app.post('/register',async(req,res)=>{
 //     const { name, email, password, address } = req.body;
 //     // console.log("req",req.body);
@@ -39,157 +53,135 @@ app.get('/',async(req,res)=>{
 //     }
 // })
 
-app.post('/register',async(req,res)=>{
-    try{
-        const { name, email, password, address } = req.body;
-        const user = await userModel.create(
-            {
-                name : name,
-                email : email,
-                password : password,
-                address : address
-            }
-        );
-        return res.status(200).json({
-            status:true,
-            status_code:400,
-            message:"User created successfully",
-            data:user
-        });
-    }
-    catch(error){
-        console.log(error);
-    }
-});
+// app.post('/register',async(req,res)=>{
+//     try{
+//         const { name, email, password, address } = req.body;
+//         const user = await userModel.create(
+//             {
+//                 name : name,
+//                 email : email,
+//                 password : password,
+//                 address : address
+//             }
+//         );
+//         return res.status(200).json({
+//             status:true,
+//             status_code:400,
+//             message:"User created successfully",
+//             data:user
+//         });
+//     }
+//     catch(error){
+//         console.log(error);
+//     }
+// });
 
 
-// const newUser= new userModel({
-//     name: "gladson mathew",
-//     email: "gladsonmathew7@gmail.com",
-//     password: "itsgladson"
+
+// app.post("/login",async(req,res)=>{
+//     try{
+
+//         const { email, password } = req.body;
+
+
+
+
+//         const mail=await userModel.findOne({email: email});
+
+//         if(mail){
+//             const result = password === mail.password;
+//             if(result){
+//                 return res.status(200).json({ 
+//                     status:true, 
+//                     status_code:200,
+//                     message:"Email Exists",
+//                     data:null
+//                 });
+//             }
+//             else{
+//                 return res.status(200).json({ 
+//                     status:false, 
+//                     status_code:200,
+//                     error:"Invalid indentails",
+//                     data:null
+//                 });
+//             }
+//         }
+//         else{
+//             console.log("User not found");
+//             return res.status(400).json({ 
+//                 status:false,
+//                 status_code:400, 
+//                 error:"User not Found",
+//                 data:null,
+//             });
+//         }
+//     } catch(error){
+//         console.error(error);
+//     }
 // })
 
-// newUser.save()
-//     .then(user => console.log("User created:",user))
-//     .catch(err=> console.error('Error creating user: ',err))
 
-
-// userModel.create({
-//     name: "alan jose",
-//     email: "alanjose@gmail.com",
-//     password: "alanjose"
-// })
-//     .then(user=> console.log("User created successfully",user))
-//     .catch(err=> console.error('Error creating user: ',err))
-
-
-app.post("/login",async(req,res)=>{
-    try{
-
-        const { email, password } = req.body;
-
-
-
-
-        const mail=await userModel.findOne({email: email});
-
-        if(mail){
-            const result = password === mail.password;
-            if(result){
-                return res.status(200).json({ 
-                    status:true, 
-                    status_code:200,
-                    message:"Email Exists",
-                    data:null
-                });
-            }
-            else{
-                return res.status(200).json({ 
-                    status:false, 
-                    status_code:200,
-                    error:"Invalid indentails",
-                    data:null
-                });
-            }
-        }
-        else{
-            console.log("User not found");
-            return res.status(400).json({ 
-                status:false,
-                status_code:400, 
-                error:"User not Found",
-                data:null,
-            });
-        }
-    } catch(error){
-        console.error(error);
-    }
-})
-
-
-app.post("/listall",async(req,res)=>{
-    try{
-        const list= await userModel.find();
-        if(list.length <= 0){
-            return res.status(400).json({
-                status:false,
-                status_code:400,
-                message:"No users found",
-                data:null
-            });
-        }
+// app.post("/listall",async(req,res)=>{
+//     try{
+//         const list= await userModel.find();
+//         if(list.length <= 0){
+//             return res.status(400).json({
+//                 status:false,
+//                 status_code:400,
+//                 message:"No users found",
+//                 data:null
+//             });
+//         }
         
-        return res.status(200).json({
-            status:true,
-            data: list, 
-            message:"users found"
-        });
-    }
-    catch(error){
-        console.error(error);
-    }
-})
+//         return res.status(200).json({
+//             status:true,
+//             data: list, 
+//             message:"users found"
+//         });
+//     }
+//     catch(error){
+//         console.error(error);
+//     }
+// })
 
 
-app.post("/listbyId",async(req,res)=>{
-    try{
-        const {id} = req.body;
-        const item= await userModel.findOne(
-            { userid: id }
-        );
-        if(!item){
-            return res.status(400).json({
-                status:false,
-                status_code:400,
-                error:"User not found",
-                data:null
-            })
-        }
-        else{
-            return res.status(200).json({
-                status:true,
-                status_code:200,
-                message:"User data retreived successfully",
-                data:item
-            })
-        }
-    }
-    catch(error){
-        console.error(error);
-        res.status(500).json({
-             status: false,
-             status_code:500,
-             message: "Something went wrong",
-             data: null
-         });
-    }
-})
+// app.post("/listbyId",async(req,res)=>{
+//     try{
+//         const {id} = req.body;
+//         const item= await userModel.findOne(
+//             { userid: id }
+//         );
+//         if(!item){
+//             return res.status(400).json({
+//                 status:false,
+//                 status_code:400,
+//                 error:"User not found",
+//                 data:null
+//             })
+//         }
+//         else{
+//             return res.status(200).json({
+//                 status:true,
+//                 status_code:200,
+//                 message:"User data retreived successfully",
+//                 data:item
+//             })
+//         }
+//     }
+//     catch(error){
+//         console.error(error);
+//         res.status(500).json({
+//              status: false,
+//              status_code:500,
+//              message: "Something went wrong",
+//              data: null
+//          });
+//     }
+// })
 
 
 
-app.listen(port,()=>{
-    console.log(`Server running at http://localhost:${port}`);
-});
 
 
 
