@@ -18,6 +18,7 @@ app.use('/listall',listall);
 app.use('/view',view);
 
 
+
 mongoose.connect("mongodb+srv://raothomas2003:iambatman@node.sqfjt.mongodb.net/Test?retryWrites=true&w=majority&appName=Node",
     {
     useNewUrlParser: true,          
