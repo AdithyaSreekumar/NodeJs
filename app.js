@@ -104,12 +104,21 @@ app.post("/login",async(req,res)=>{
 
 app.post("/listall",async(req,res)=>{
     try{
-        const {id,name,email,password,address} = userModel;
-        userModel.find()
-        .then(users=>console.log("All users:",users))
-        .catch(err=>console.error('Error fetching users: ',err));
-
-        return res.status(200).json({id,name,email,password,address})
+        // const {id,name,email,password,address} = userModel;
+        const list= await userModel.find();
+        if(list.length <= 0){
+            return res.status(400).json({
+                status:false,
+                status_code:400,
+                message:"No users found",
+            });
+        }
+        
+        return res.status(200).json({
+            status:true,
+            data: list, 
+            message:"users found"
+        });
     }
     catch(error){
         console.error(error);
