@@ -35,24 +35,29 @@ app.get('/',async(req,res)=>{
 // })
 
 app.post('/register',async(req,res)=>{
-    const { name, email, password, address } = req.body;
-    const user = await userModel.create(
-        {
-            name : name,
-            email : email,
-            password : password,
-            address : address
-        }
-    );
-    return res.status(200).json(user);
+    try{
+        const { name, email, password, address } = req.body;
+        const user = await userModel.create(
+            {
+                name : name,
+                email : email,
+                password : password,
+                address : address
+            }
+        );
+        return res.status(200).json(user);
+    }
+    catch(error){
+        console.log(error);
+    }
 });
 
 
-const newUser= new userModel({
-    name: "gladson mathew",
-    email: "gladsonmathew7@gmail.com",
-    password: "itsgladson"
-})
+// const newUser= new userModel({
+//     name: "gladson mathew",
+//     email: "gladsonmathew7@gmail.com",
+//     password: "itsgladson"
+// })
 
 // newUser.save()
 //     .then(user => console.log("User created:",user))
@@ -97,7 +102,19 @@ app.post("/login",async(req,res)=>{
 })
 
 
+app.post("/listall",async(req,res)=>{
+    try{
+        const {id,name,email,password,address} = userModel;
+        userModel.find()
+        .then(users=>console.log("All users:",users))
+        .catch(err=>console.error('Error fetching users: ',err));
 
+        return res.status(200).json({id,name,email,password,address})
+    }
+    catch(error){
+        console.error(error);
+    }
+})
 
 
 // app.post('/login',async(req,res)=>{
