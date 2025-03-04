@@ -6,6 +6,15 @@ const userModel = require('../model/userdata');
 router.post("/",async(req,res)=>{
     try{
         const {id} = req.body;
+        if(!id){
+            res.status(400).json({
+                status:false,
+                status_code:400,
+                message:"Please provide an id",
+                data:null
+            })
+         }
+        else{
         const item= await userModel.findOne(
             { userid: id }
         );
@@ -25,7 +34,7 @@ router.post("/",async(req,res)=>{
                 data:item
             })
         }
-    }
+    }}
     catch(error){
         console.error(error);
         res.status(500).json({
@@ -39,3 +48,7 @@ router.post("/",async(req,res)=>{
 
 
 module.exports = router;
+
+
+
+

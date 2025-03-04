@@ -219,7 +219,7 @@ app.listen(port,()=>{
 //                 status_code:400,
 //                 message: "Please provide your name",
 //                 data: null
-//             });
+//             });  
 //             return;
 
 //         }
@@ -249,12 +249,7 @@ app.listen(port,()=>{
 //             data: null
 //         });
 
-//         res.status(500).json({
-//             status: false,
-//             status_code:400,
-//             message: "Please provide your name",
-//             data: null
-//         });
+//         
 //     }
 // });
 
