@@ -5,8 +5,8 @@ const userModel = require('../model/userdata');
 
 router.post("/",async(req,res)=>{
     try{
-        const {id} = req.body;
-        if(!id){
+        const {_id} = req.body;
+        if(!_id){
             res.status(400).json({
                 status:false,
                 status_code:400,
@@ -16,7 +16,7 @@ router.post("/",async(req,res)=>{
          }
         else{
         const item= await userModel.findOne(
-            { userid: id }
+            { _id: _id }
         );
         if(!item){
             return res.status(400).json({
