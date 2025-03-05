@@ -3,14 +3,20 @@ const mongoose = require('mongoose');
 const app = express();
 const port=3000;
 const cors = require('cors');
+
 const userModel = require('./model/userdata');
+const booksModel = require('./model/Books');
+const empModel = require("./model/Employee");
+
 const auth = require('./Routes/auth');
+const emp = require('./Routes/employee');
 
 
 app.use(express.json());
 app.use(cors());
 
 app.use('/auth',auth);
+app.use('/emp',emp);
 
 
 
