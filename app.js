@@ -4,17 +4,17 @@ const app = express();
 const port=3000;
 const cors = require('cors');
 const userModel = require('./model/userdata');
-const signup = require('./Routes/signup');
-const login =require('./Routes/login');
-const listall = require('./Routes/listall');
+const auth = require('./Routes/auth');
+// const login =require('./Routes/login');
+// const listall = require('./Routes/listall');
 const view = require('./Routes/view');
 
 app.use(express.json());
 app.use(cors());
 
-app.use('/signup',signup);
-app.use('/login',login);
-app.use('/listall',listall);
+app.use('/auth',auth);
+// app.use('/login',login);
+// app.use('/listall',listall);
 app.use('/view',view);
 
 
