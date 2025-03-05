@@ -10,6 +10,7 @@ const empModel = require("./model/Employee");
 
 const auth = require('./Routes/auth');
 const emp = require('./Routes/employee');
+const adm = require('./Routes/admin');
 
 
 app.use(express.json());
@@ -17,6 +18,7 @@ app.use(cors());
 
 app.use('/auth',auth);
 app.use('/emp',emp);
+app.use('/admin',adm);
 
 
 
