@@ -66,6 +66,13 @@ router.post("/addemp", async (req, res) => {
         data: null,
       });
     }
+    if (Id.role != "Staff") {
+      return res.status(400).json({
+        status: false,
+        status_code: 400,
+        message: "This id is not a staff",
+      });
+    }
 
     //creayeing mew employee
     const newemp = await empModel.create({
@@ -93,14 +100,14 @@ router.post("/addemp", async (req, res) => {
   }
 });
 
-router.post("/listState", async (req, res) => {
+router.post("/showDetails", async (req, res) => {
   try {
     const { name } = req.body;
-   
+
     const result = await userModel.findOne({
-        name: name
+      name: name,
     });
-    if (result.length <= 0) {
+    if (!result) {
       return res.status(400).json({
         status: false,
         status_code: 400,
@@ -110,13 +117,11 @@ router.post("/listState", async (req, res) => {
     }
 
     return res.status(200).json({
-        status: true,
-        status_code: 200,
-        message: "user found",
-        data: result.address.state
-    })
-    
-        
+      status: true,
+      status_code: 200,
+      message: "user found",
+      data: result,
+    });
   } catch (error) {
     console.log(error);
     return res.status(500).json({
