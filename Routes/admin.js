@@ -93,12 +93,12 @@ router.post("/addemp", async (req, res) => {
   }
 });
 
-router.post("/listState", async (req, res) => {
+router.post("/showDetails", async (req, res) => {
   try {
     const { name } = req.body;
-   
+
     const result = await userModel.findOne({
-        name: name
+      name: name,
     });
     if (result.length <= 0) {
       return res.status(400).json({
@@ -110,13 +110,11 @@ router.post("/listState", async (req, res) => {
     }
 
     return res.status(200).json({
-        status: true,
-        status_code: 200,
-        message: "user found",
-        data: result.address.state
-    })
-    
-        
+      status: true,
+      status_code: 200,
+      message: "user found",
+      data: result,
+    });
   } catch (error) {
     console.log(error);
     return res.status(500).json({

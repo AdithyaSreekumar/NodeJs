@@ -1,56 +1,46 @@
-const express = require('express');
-const mongoose = require('mongoose');
+const express = require("express");
+const mongoose = require("mongoose");
 const app = express();
-const port=3000;
-const cors = require('cors');
+const port = 3000;
+const cors = require("cors");
 
-const userModel = require('./model/userdata');
-const booksModel = require('./model/Books');
+const userModel = require("./model/userdata");
+const booksModel = require("./model/Books");
 const empModel = require("./model/Employee");
 
-const auth = require('./Routes/auth');
-const emp = require('./Routes/employee');
-const adm = require('./Routes/admin');
-
+const auth = require("./Routes/auth");
+const emp = require("./Routes/employee");
+const adm = require("./Routes/admin");
 
 app.use(express.json());
 app.use(cors());
 
-app.use('/auth',auth);
-app.use('/emp',emp);
-app.use('/admin',adm);
+app.use("/auth", auth);
+app.use("/emp", emp);
+app.use("/admin", adm);
 
-
-
-mongoose.connect("mongodb+srv://raothomas2003:iambatman@node.sqfjt.mongodb.net/Test?retryWrites=true&w=majority&appName=Node",
+mongoose
+  .connect(
+    "mongodb+srv://raothomas2003:iambatman@node.sqfjt.mongodb.net/Test?retryWrites=true&w=majority&appName=Node",
     {
-    useNewUrlParser: true,          
-    useUnifiedTopology: true,       
-    })
-    .then(()=>{
-            console.log("Connected to MongoDB");
-    })
-    .catch((error)=>{
-        console.log(error);
-    });
+      useNewUrlParser: true,
+      useUnifiedTopology: true,
+    }
+  )
+  .then(() => {
+    console.log("Connected to MongoDB");
+  })
+  .catch((error) => {
+    console.log(error);
+  });
 
-app.get('/',async(req,res)=>{
-    res.send('Welcome!!');
+app.get("/", async (req, res) => {
+  res.send("Welcome!!");
 });
 
-
-
-app.listen(port,()=>{
-    console.log(`Server running at http://localhost:${port}`);
+app.listen(port, () => {
+  console.log(`Server running at http://localhost:${port}`);
 });
-
-
-
-
-
-
-
-
 
 // app.post('/login',async(req,res)=>{
 //     const { email, password } =req.body;
@@ -62,9 +52,8 @@ app.listen(port,()=>{
 //     }
 // })
 
-
 // app.get('/',(req,res)=>{
-//     res.send('Hello Express!'); 
+//     res.send('Hello Express!');
 // });
 
 // app.get('/getname', async(req,res)=>{
@@ -76,7 +65,7 @@ app.listen(port,()=>{
 //                 status_code:400,
 //                 message: "Please provide your name",
 //                 data: null
-//             });  
+//             });
 //             return;
 
 //         }
@@ -106,7 +95,7 @@ app.listen(port,()=>{
 //             data: null
 //         });
 
-//         
+//
 //     }
 // });
 
