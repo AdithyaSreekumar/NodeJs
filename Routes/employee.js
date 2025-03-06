@@ -4,6 +4,7 @@ const router = express.Router();
 
 const booksModel = require("../model/Books");
 const empModel = require("../model/Employee");
+const userModel = require("../model/userdata");
 
 //add book
 router.post("/addbook", async (req, res) => {
@@ -185,14 +186,15 @@ router.put("/update", async (req, res) => {
   }
 });
 
-//lenting Book
 
+
+//lenting Book
 router.put("/lentBook", async (req, res) => {
   try {
     const { empid, custid, bookid } = req.body;
-    const employee = empModel.findOne({ empid });
-    const customer = custModel.findOne({ custid });
-    const book = booksModel.findOne({ bookid });
+    const employee = await empModel.findOne({ _id: empid });
+    const customer = await userModel.findOne({ _id: custid });
+    const book = await booksModel.findOne({ _id: bookid });
     if (!empid) {
       return res.status(400).json({
         status: false,
@@ -201,7 +203,7 @@ router.put("/lentBook", async (req, res) => {
         data: null,
       });
     }
-    if (empid != employee._id) {
+    if (employee == null) {
       return res.status(400).json({
         status: false,
         status_code: 400,
@@ -217,14 +219,14 @@ router.put("/lentBook", async (req, res) => {
         data: null,
       });
     }
-    if (custid != customer._id) {
-        return res.status(400).json({
-          status: false,
-          status_code: 400,
-          message: "Customer not found",
-          data: null,
-        });
-      }
+    if (customer == null) {
+      return res.status(400).json({
+        status: false,
+        status_code: 400,
+        message: "Customer not found",
+        data: null,
+      });
+    }
     if (!bookid) {
       return res.status(400).json({
         status: false,
@@ -233,15 +235,36 @@ router.put("/lentBook", async (req, res) => {
         data: null,
       });
     }
-    if (bookid != employee._id) {
-        return res.status(400).json({
-          status: false,
-          status_code: 400,
-          message: "Book not found",
-          data: null,
-        });
-      }
-  } catch (error) {}
+    if (book == null) {
+      return res.status(400).json({
+        status: false,
+        status_code: 400,
+        message: "Book not found",
+        data: null,
+      });
+    }
+    const updated = await booksModel.findOneAndUpdate(
+      { _id: book._id },
+      { available: false },
+      { new: true }
+    );
+    if (updated) {
+      return res.status(200).json({
+        status: true,
+        status_code: 200,
+        message: "Book has been lent successfully",
+        data: updated,
+      });
+    }
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({
+      status: false,
+      status_code: 500,
+      message: "Internal Server Error",
+      data: null,
+    });
+  }
 });
 
 module.exports = router;
