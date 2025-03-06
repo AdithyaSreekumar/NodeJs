@@ -3,6 +3,7 @@ const mongoose = require("mongoose");
 const router = express.Router();
 
 const booksModel = require("../model/Books");
+const empModel = require("../model/Employee");
 
 //add book
 router.post("/addbook", async (req, res) => {
@@ -182,6 +183,65 @@ router.put("/update", async (req, res) => {
       data: null,
     });
   }
+});
+
+//lenting Book
+
+router.put("/lentBook", async (req, res) => {
+  try {
+    const { empid, custid, bookid } = req.body;
+    const employee = empModel.findOne({ empid });
+    const customer = custModel.findOne({ custid });
+    const book = booksModel.findOne({ bookid });
+    if (!empid) {
+      return res.status(400).json({
+        status: false,
+        status_code: 400,
+        message: "Please provide the id of the employee to lend the book",
+        data: null,
+      });
+    }
+    if (empid != employee._id) {
+      return res.status(400).json({
+        status: false,
+        status_code: 400,
+        message: "Employee not found",
+        data: null,
+      });
+    }
+    if (!custid) {
+      return res.status(400).json({
+        status: false,
+        status_code: 400,
+        message: "Please provide the id of the customer to lend the book",
+        data: null,
+      });
+    }
+    if (custid != customer._id) {
+        return res.status(400).json({
+          status: false,
+          status_code: 400,
+          message: "Customer not found",
+          data: null,
+        });
+      }
+    if (!bookid) {
+      return res.status(400).json({
+        status: false,
+        status_code: 400,
+        message: "Please provide the id of the book to lend the book",
+        data: null,
+      });
+    }
+    if (bookid != employee._id) {
+        return res.status(400).json({
+          status: false,
+          status_code: 400,
+          message: "Book not found",
+          data: null,
+        });
+      }
+  } catch (error) {}
 });
 
 module.exports = router;

@@ -5,6 +5,7 @@ const books = new mongoose.Schema({
   author: { type: String, required: true },
   genre: { type: String, required: true },
   price: { type: Number, required: true },
+  available: { type: Boolean, required: true, default: true },
 });
 
 const booksModel = mongoose.model("booksModel", books);
