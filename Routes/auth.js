@@ -23,6 +23,14 @@ router.post("/signup", async (req, res) => {
         data: null,
       });
     }
+    if (role != "Staff" && role != "Customer") {
+      res.status(400).json({
+        status: false,
+        status_code: 400,
+        message: "Invalid role",
+        data: null,
+      });
+    }
     if (!email) {
       res.status(400).json({
         status: false,

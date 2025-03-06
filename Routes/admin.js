@@ -66,6 +66,13 @@ router.post("/addemp", async (req, res) => {
         data: null,
       });
     }
+    if (Id.role != "Staff") {
+      return res.status(400).json({
+        status: false,
+        status_code: 400,
+        message: "This id is not a staff",
+      });
+    }
 
     //creayeing mew employee
     const newemp = await empModel.create({
@@ -100,7 +107,7 @@ router.post("/showDetails", async (req, res) => {
     const result = await userModel.findOne({
       name: name,
     });
-    if (result.length <= 0) {
+    if (!result) {
       return res.status(400).json({
         status: false,
         status_code: 400,
