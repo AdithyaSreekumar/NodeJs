@@ -7,10 +7,12 @@ const cors = require("cors");
 const userModel = require("./model/userdata");
 const booksModel = require("./model/Books");
 const empModel = require("./model/Employee");
+const lendModel = require("./model/lending")
 
 const auth = require("./Routes/auth");
 const emp = require("./Routes/employee");
 const adm = require("./Routes/admin");
+const book = require("./Routes/lend");
 
 app.use(express.json());
 app.use(cors());
@@ -18,6 +20,7 @@ app.use(cors());
 app.use("/auth", auth);
 app.use("/emp", emp);
 app.use("/admin", adm);
+app.use("/book",book)
 
 mongoose
   .connect(
