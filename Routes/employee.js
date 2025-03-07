@@ -5,6 +5,7 @@ const router = express.Router();
 const booksModel = require("../model/Books");
 const empModel = require("../model/Employee");
 const userModel = require("../model/userdata");
+const lendModel = require("../model/lending");
 
 //add book
 router.post("/addbook", async (req, res) => {
@@ -186,56 +187,22 @@ router.put("/update", async (req, res) => {
   }
 });
 
-
-
-//lenting Book
-router.put("/lentBook", async (req, res) => {
+//show boook data (individual)
+router.post("/showDetails", async (req, res) => {
   try {
-    const { empid, custid, bookid } = req.body;
-    const employee = await empModel.findOne({ _id: empid });
-    const customer = await userModel.findOne({ _id: custid });
-    const book = await booksModel.findOne({ _id: bookid });
-    if (!empid) {
-      return res.status(400).json({
-        status: false,
-        status_code: 400,
-        message: "Please provide the id of the employee to lend the book",
-        data: null,
-      });
-    }
-    if (employee == null) {
-      return res.status(400).json({
-        status: false,
-        status_code: 400,
-        message: "Employee not found",
-        data: null,
-      });
-    }
-    if (!custid) {
-      return res.status(400).json({
-        status: false,
-        status_code: 400,
-        message: "Please provide the id of the customer to lend the book",
-        data: null,
-      });
-    }
-    if (customer == null) {
-      return res.status(400).json({
-        status: false,
-        status_code: 400,
-        message: "Customer not found",
-        data: null,
-      });
-    }
+    const { bookid } = req.body;
+    const bookdetails = await booksModel.findOne({ _id: bookid });
+    const lenddetails = await lendModel.findOne({ bookID: bookid });
+    const userdetails = await userModel.findOne({ _id: lenddetails.empID });
     if (!bookid) {
       return res.status(400).json({
         status: false,
         status_code: 400,
-        message: "Please provide the id of the book to lend the book",
+        message: "Please provide the id of the book to show details",
         data: null,
       });
     }
-    if (book == null) {
+    if (!bookdetails) {
       return res.status(400).json({
         status: false,
         status_code: 400,
@@ -243,21 +210,33 @@ router.put("/lentBook", async (req, res) => {
         data: null,
       });
     }
-    const updated = await booksModel.findOneAndUpdate(
-      { _id: book._id },
-      { available: false },
-      { new: true }
-    );
-    if (updated) {
+    if(lenddetails == null){
+      // const details = {bookId: bookdetails.id, title:bookdetails.title, };
+      return res.status(200).json({
+        status:true,
+        status_code: 200,
+        message : "Book Details",
+        data: bookdetails
+      });
+    }
+    else{
+      const details = {bookdetails,
+        message : "List of Borrowers:",
+        name : userdetails.name, 
+        lending_status: lenddetails.status, 
+        borrow_data: lenddetails.lendDate,
+        return_date: lenddetails.returnDate
+    }
       return res.status(200).json({
         status: true,
         status_code: 200,
-        message: "Book has been lent successfully",
-        data: updated,
-      });
+        message : "Book Details",
+        data : details
+      })
     }
-  } catch (error) {
-    console.error(error);
+    
+  }
+   catch (error) {
     return res.status(500).json({
       status: false,
       status_code: 500,
