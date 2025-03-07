@@ -23,7 +23,7 @@ router.post("/signup", async (req, res) => {
         data: null,
       });
     }
-    if (role != "Staff" && role != "Customer") {
+    if (role != "Staff" && role != "Customer" && role != "Admin") {
       res.status(400).json({
         status: false,
         status_code: 400,
