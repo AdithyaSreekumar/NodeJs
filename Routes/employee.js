@@ -35,14 +35,6 @@ router.post("/addbook", async (req, res) => {
         data: null,
       });
     }
-    // if(!year){
-    //     res.status(400).json({
-    //         status:false,
-    //         status_code:400,
-    //         message: 'Please enter year',
-    //         data:null
-    //     })
-    // }
     if (!price) {
       res.status(400).json({
         status: false,
@@ -55,7 +47,6 @@ router.post("/addbook", async (req, res) => {
       title: title,
       author: author,
       genre: genre,
-      // year:year,
       price: price,
     });
     return res.status(200).json({
@@ -192,15 +183,10 @@ router.post("/showDetails", async (req, res) => {
   try {
     const { bookid } = req.body;
     const bookdetails = await booksModel.findOne({ _id: bookid });
-    const lenddetails = await lendModel.find({ bookID: bookid }).populate({path :'custID',select:'name email'});  //Populating
-   
-    // const userdetails = await userModel.find({ _id: lenddetails.custID });
-    const book = await lendModel.find({bookID:bookid}).populate({path:'bookID',select:'title'});
-    // const finalizedDetails = [...lenddetails,...userdetails]
-    // let custIds =  lenddetails.map(x => x.custID);
-    // console.log("custIds",custIds);
-    // const userdetails = await userModel.find({ _id: lenddetails.custID });
-    // const lendhistory = [...userdetails, ...lenddetails];
+    const lenddetails = await lendModel
+      .find({ bookID: bookid }, { bookID: 1, custID: 1 })
+      .populate({ path: "custID", select: "name email" })
+      .populate({ path: "bookID", select: "title" }); //Populating
     if (!bookid) {
       return res.status(400).json({
         status: false,
@@ -218,7 +204,6 @@ router.post("/showDetails", async (req, res) => {
       });
     }
     if (lenddetails.length == 0) {
-      // const details = {bookId: bookdetails.id, title:bookdetails.title, };
       return res.status(200).json({
         status: true,
         status_code: 200,
@@ -230,8 +215,6 @@ router.post("/showDetails", async (req, res) => {
         bookdetails,
         message: "List of Borrowers:",
         lenddetails,
-        book
-        // finalizedDetails
       };
       return res.status(200).json({
         status: true,
