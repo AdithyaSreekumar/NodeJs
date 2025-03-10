@@ -192,8 +192,15 @@ router.post("/showDetails", async (req, res) => {
   try {
     const { bookid } = req.body;
     const bookdetails = await booksModel.findOne({ _id: bookid });
-    const lenddetails = await lendModel.findOne({ bookID: bookid });
-    const userdetails = await userModel.findOne({ _id: lenddetails.empID });
+    const lenddetails = await lendModel.find({ bookID: bookid }).populate({path :'custID',select:'name email'});  //Populating
+   
+    // const userdetails = await userModel.find({ _id: lenddetails.custID });
+    const book = await lendModel.find({bookID:bookid}).populate({path:'bookID',select:'title'});
+    // const finalizedDetails = [...lenddetails,...userdetails]
+    // let custIds =  lenddetails.map(x => x.custID);
+    // console.log("custIds",custIds);
+    // const userdetails = await userModel.find({ _id: lenddetails.custID });
+    // const lendhistory = [...userdetails, ...lenddetails];
     if (!bookid) {
       return res.status(400).json({
         status: false,
@@ -210,33 +217,31 @@ router.post("/showDetails", async (req, res) => {
         data: null,
       });
     }
-    if(lenddetails == null){
+    if (lenddetails.length == 0) {
       // const details = {bookId: bookdetails.id, title:bookdetails.title, };
-      return res.status(200).json({
-        status:true,
-        status_code: 200,
-        message : "Book Details",
-        data: bookdetails
-      });
-    }
-    else{
-      const details = {bookdetails,
-        message : "List of Borrowers:",
-        name : userdetails.name, 
-        lending_status: lenddetails.status, 
-        borrow_data: lenddetails.lendDate,
-        return_date: lenddetails.returnDate
-    }
       return res.status(200).json({
         status: true,
         status_code: 200,
-        message : "Book Details",
-        data : details
-      })
+        message: "Book Details",
+        data: bookdetails,
+      });
+    } else {
+      const details = {
+        bookdetails,
+        message: "List of Borrowers:",
+        lenddetails,
+        book
+        // finalizedDetails
+      };
+      return res.status(200).json({
+        status: true,
+        status_code: 200,
+        message: "Book Details",
+        data: details,
+      });
     }
-    
-  }
-   catch (error) {
+  } catch (error) {
+    console.log(error);
     return res.status(500).json({
       status: false,
       status_code: 500,

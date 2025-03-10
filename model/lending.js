@@ -12,7 +12,7 @@ const lendData = new mongoose.Schema({
   },
   bookID: {
     type: mongoose.Schema.ObjectId,
-    ref: "bookModel",
+    ref: "booksModel",
     required :true
   },
   lendDate: {
